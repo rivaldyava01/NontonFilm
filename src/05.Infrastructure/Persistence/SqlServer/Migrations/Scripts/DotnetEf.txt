@@ -1,0 +1,11 @@
+﻿set ASPNETCORE_ENVIRONMENT=Local
+
+dotnet tool update --global dotnet-ef
+
+dotnet ef migrations add SqlServerNontonFilmDbContext_001_InitialSchema --context SqlServerNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi --output-dir Persistence/SqlServer/Migrations
+
+dotnet ef migrations remove  --context SqlServerNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi
+
+dotnet ef database update --context SqlServerNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi
+
+dotnet ef database drop --force --context SqlServerNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi

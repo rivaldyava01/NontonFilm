@@ -1,0 +1,67 @@
+﻿@page "/Tickets/User/{ShowId:guid}"
+
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Ticket_User_Handle)]
+
+@using Zeta.NontonFilm.Shared.Services.Authentication.Constants
+
+<BrowserTabTitle>Tickets</BrowserTabTitle>
+<PageHeader Title="Tickets" />
+<ErrorViewer Error="_error" />
+
+<AuthorizeView Context="authorizeContext">
+    <Authorized>
+        <MudGrid Class="mb-5">
+            <MudItem xs="4">
+                <MudField Label="@DisplayTextFor.MovieTitle">@_ticketSell.MovieTitle</MudField>
+            </MudItem>
+             <MudItem xs="4">
+                 <MudField Label="@DisplayTextFor.DateTimeShow">@_ticketSell.ShowDateTime</MudField>
+            </MudItem>
+            <MudItem xs="4">
+                <MudField Label="@DisplayTextFor.TicketPrice">@TicketPrice.ToCurrency0DisplayText().ToString()</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudContainer MaxWidth="MaxWidth.ExtraSmall" Style="overflow:scroll; max-height:300px; overflow-y: scroll" Fixed=true>
+                    @foreach (var rowSeat in _seats2D)
+                    {
+                        <MudStack Row="true" Class="my-3">
+                            @foreach (var seat in rowSeat)
+                            {
+                                var color = seat.IsChosen ? Color.Success : Color.Error;
+
+                                if (seat.TicketSalesId is not null)
+                                {
+                                    <MudButton Variant="Variant.Filled"
+                                   StartIcon="@Icons.Filled.EventSeat"
+                                   OnClick="@(() => ToggleChosen(seat))"
+                                   Disabled="true"
+                                   Class="px-10"
+                                   Style="max-width:100px; background-color:blueviolet!important">
+                                        @seat.Code
+                                    </MudButton>
+                                }
+                                else
+                                {
+                                    <MudButton Variant="Variant.Filled" Color="color"
+                                   StartIcon="@Icons.Filled.EventSeat"
+                                   OnClick="@(() => ToggleChosen(seat))"
+                                   Class="px-10"
+                                   Style="max-width:100px">
+                                        @seat.Code
+                                    </MudButton>
+                                }
+                            }
+                        </MudStack>
+                    }
+                </MudContainer>
+        
+            </MudItem>
+            <MudItem Style="background-color:black; text-align:center; color:azure;" xs="12">Screen</MudItem>
+            @if (_seats.Where(x => x.IsChosen).Any())
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ShowDialogConfirmationPurchaseTicket" Class="mt-4 mb-6">Submit</MudButton>
+            }
+        </MudGrid>
+    </Authorized>
+</AuthorizeView>

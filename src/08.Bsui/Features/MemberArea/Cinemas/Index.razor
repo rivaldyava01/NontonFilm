@@ -1,0 +1,60 @@
+﻿@page "/Cinemas/User"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Cinema_User_Handle)]
+
+<BrowserTabTitle>@DisplayTextFor.Cinemas</BrowserTabTitle>
+<PageHeader Title="@DisplayTextFor.Cinemas" />
+<ErrorViewer Error="@_error" />
+
+<MudGrid>
+    <MudItem xs="6" Class="mb-5">
+        <MudAutocomplete T="GetCitiesForUser_City"
+                         Label="@DisplayTextFor.City"
+                         SearchFunc="@SearchCity"
+                         @bind-Value="_citiesUser.City"
+                         ToStringFunc="@(x => x is null ? null : x.Name)"
+                         ResetValueOnEmptyText="true"
+                         CoerceText="true" 
+                         CoerceValue="true"
+                         Clearable="true" />
+    </MudItem>
+    <MudItem xs="6">
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="(() =>ShowCinemas(_citiesUser.City.Id))" Class="mb-5">Submit</MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudItem xs="11">
+    <div hidden="@_showpanel">
+        <MudExpansionPanels>
+            @foreach (var cinema in _cinemas)
+            {
+                <MudExpansionPanel Text="@cinema.Name">
+                    @foreach (var studio in cinema.Studios)
+                    {
+                        <MudDivider />
+                        <MudGrid Class="mt-3">
+                            <MudItem xs="6">
+                                <MudText>@studio.MovieName</MudText>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudText>@studio.Name</MudText>
+                            </MudItem>
+                            <MudItem>@studio.TicketPrice</MudItem>
+                        </MudGrid>
+                        <MudGrid Class="mb-3">
+                            @foreach (var show in studio.Shows)
+                            {
+                                <MudItem xs="2">
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="@RouteFor.TicketDetails(show.Id)">@show.TimeShow</MudButton>
+                                </MudItem>
+                            }
+                        </MudGrid>
+
+                    }
+
+                </MudExpansionPanel>
+            }
+
+        </MudExpansionPanels>
+    </div>
+</MudItem>

@@ -1,0 +1,18 @@
+﻿<MudDialog>
+    <DialogContent>
+        <ErrorViewer Error="@_error" />
+        <LoadingLinear IsVisible="@_isLoading" />
+        <EditForm Model="Request" OnInvalidSubmit="OnInvalidSubmit" OnValidSubmit="OnValidSubmit">
+            <FluentValidationValidator />
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@DisplayTextFor.Name" @bind-Value="Request.Name" />
+                </MudItem>
+            </MudGrid>
+            <MudPaper Elevation="0" Class="mt-8 text-right">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@CommonDisplayTextFor.Submit</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Dark" OnClick="Cancel">@CommonDisplayTextFor.Cancel</MudButton>
+            </MudPaper>
+        </EditForm>
+    </DialogContent>
+</MudDialog>

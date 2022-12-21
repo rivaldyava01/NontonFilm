@@ -1,0 +1,53 @@
+﻿@page "/Cinemas/Edit/{CinemaId:guid}"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_CinemaChain_Edit)]
+
+<BrowserTabTitle></BrowserTabTitle>
+<PageHeader Title="@($"Edit {DisplayTextFor.Cinema}")" />
+<ErrorViewer Error="@_error" />
+<Loading IsVisible="@_isLoading" />
+
+<EditForm Model="_request" OnInvalidSubmit="OnInvalidSubmit" OnValidSubmit="OnValidSubmit">
+    <FluentValidationValidator />
+    <MudGrid>
+        <MudItem xs="6">
+            <MudAutocomplete T="UpdateCinemaCommand_CinemaChain"
+                             Label="@DisplayTextFor.CinemaChain"
+                             SearchFunc="@SearchCinemaChain"
+                             @bind-Value="_request.CinemaChain"
+                             ToStringFunc="@(x => x is null ? null : x.CinemaChainName)"
+                             ResetValueOnEmptyText="true"
+                             CoerceText="true" 
+                             CoerceValue="true"
+                             Clearable="true" />
+        </MudItem>
+        <MudItem xs="6">
+            <MudAutocomplete T="UpdateCinemaCommand_City"
+                             Label="@DisplayTextFor.City"
+                             SearchFunc="@SearchCity"
+                             @bind-Value="_request.City"
+                             ToStringFunc="@(x => x is null ? null : x.CityName)"
+                             ResetValueOnEmptyText="true"
+                             CoerceText="true" 
+                             CoerceValue="true"
+                             Clearable="true" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="@DisplayTextFor.Name" @bind-Value="_request.Name" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="@DisplayTextFor.Address" @bind-Value="_request.Address" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField Label="@DisplayTextFor.EmailAddress" @bind-Value="_request.EmailAddress" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField Label="@DisplayTextFor.PhoneNumber" @bind-Value="_request.PhoneNumber" />
+        </MudItem>
+    </MudGrid>
+    <MudPaper Elevation="0" Class="mt-8 text-right">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@CommonDisplayTextFor.Submit</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Dark" Href="@RouteFor.Index">@CommonDisplayTextFor.Cancel</MudButton>
+    </MudPaper>
+</EditForm>
+

@@ -1,0 +1,146 @@
+﻿@page "/Studios/Details/{StudioId:guid}"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Studio_View)]
+@attribute [Authorize(Policy = Permissions.NontonFilm_Show_Index_Upcoming)]
+@attribute [Authorize(Policy = Permissions.NontonFilm_Show_Index_Past)]
+
+@using Zeta.NontonFilm.Bsui.Common.Extensions
+@using Zeta.NontonFilm.Shared.Shows.Queries.GetPastShows
+@using Zeta.NontonFilm.Shared.Shows.Queries.GetUpcomingShows
+@using Zeta.NontonFilm.Shared.Studios.Queries.GetStudio
+@using Zeta.NontonFilm.Shared.Studios.Queries.GetStudios
+
+<BrowserTabTitle>@DisplayTextFor.Studios</BrowserTabTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<ErrorViewer Error="@_error" />
+
+
+@if (_studio is not null)
+{
+    <PageHeader Title="@_studio.Name" SubTitleKey="@_studio.CinemaName" />
+
+    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6" Color="Color.Dark">
+        <MudTabPanel Text="@DisplayTextFor.UpcomingShows">
+            <MudGrid>
+                <MudTable ServerData="@(new Func<TableState, Task<TableData<GetUpcomingShows_Show>>>(ReloadTableUpcomingShows))"
+                      @ref="_tableUpcomingShows"
+                      Height="@HeightFor.ScrollableTable"
+                      FixedHeader="true"
+                      Hover="true"
+                      Bordered="true"
+                      Breakpoint="Breakpoint.Sm">
+                    <ToolBarContent>
+                        <AuthorizeView>
+                            <Authorized>
+                                @if (context.User.HasPermission(Permissions.NontonFilm_Show_Add))
+                                {
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.PostAdd" Class="ml-4" OnClick="(() => ShowDialogAddShow(_studio.Id))">@CommonDisplayTextFor.Add @DisplayTextFor.Show</MudButton>
+                                }
+                            </Authorized>
+                        </AuthorizeView>
+                        <MudSpacer />
+                        <MudTextField T="string"
+                                  ValueChanged="@(keyword => OnUpcomingSearch(keyword))"
+                                  Placeholder="Search"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  IconSize="Size.Medium">
+                        </MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>@DisplayTextFor.MoviesTitle</MudTh>
+                        <MudTh>@DisplayTextFor.ShowDateTime</MudTh>
+                        <MudTh>@DisplayTextFor.TicketPrice</MudTh>
+                        <MudTh>@DisplayTextFor.Action</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="@DisplayTextFor.MoviesTitle">
+                            <MudHighlighter Text="@context.MovieTitle" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <MudTd DataLabel="@DisplayTextFor.ShowDateTime">
+                            <MudHighlighter Text="@context.ShowDateTime.ToString()" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <MudTd DataLabel="@DisplayTextFor.ShowDateTime">
+                            <MudHighlighter Text="@context.TicketPrice.ToCurrency0DisplayText().ToString()" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <AuthorizeView>
+                            <Authorized Context ="contextData">
+                                <MudTd>
+                                    @if (contextData.User.HasPermission(Permissions.NontonFilm_Show_Delete))
+                                    {
+                                        <MudTooltip Text="Delete">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => ShowDialogDeleteUpcomingShow(context.Id))" />
+                                        </MudTooltip>
+                                    }
+                                </MudTd>
+                            </Authorized>
+                        </AuthorizeView>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText>No matching records found</MudText>
+                    </NoRecordsContent>
+                    <LoadingContent>
+                        <MudText>Loading...</MudText>
+                    </LoadingContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </MudGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="@DisplayTextFor.PastShows">
+            <MudGrid>
+                <MudTable ServerData="@(new Func<TableState, Task<TableData<GetPastShows_Show>>>(ReloadTablePastShows))"
+                      @ref="_tablePastShows"
+                      Height="@HeightFor.ScrollableTable"
+                      FixedHeader="true"
+                      Hover="true"
+                      Bordered="true"
+                      Breakpoint="Breakpoint.Sm">
+                    <ToolBarContent>
+                        <MudSpacer />
+                        <MudTextField T="string"
+                                  ValueChanged="@(keyword => OnPastSearch(keyword))"
+                                  Placeholder="Search"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  IconSize="Size.Medium">
+                        </MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>@DisplayTextFor.StudioName</MudTh>
+                        <MudTh>@DisplayTextFor.MoviesTitle</MudTh>
+                        <MudTh>@DisplayTextFor.ShowDateTime</MudTh>
+                        <MudTh>@DisplayTextFor.TicketPrice</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="@DisplayTextFor.StudioName">
+                            <MudHighlighter Text="@context.StudioName" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <MudTd DataLabel="@DisplayTextFor.MoviesTitle">
+                            <MudHighlighter Text="@context.MovieTitle" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <MudTd DataLabel="@DisplayTextFor.ShowDateTime">
+                            <MudHighlighter Text="@context.ShowDateTime.ToString()" HighlightedText="@_keyword" />
+                        </MudTd>
+                        <MudTd DataLabel="@DisplayTextFor.ShowDateTime">
+                            <MudHighlighter Text="@context.TicketPrice.ToString()" HighlightedText="@_keyword" />
+                        </MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText>No matching records found</MudText>
+                    </NoRecordsContent>
+                    <LoadingContent>
+                        <MudText>Loading...</MudText>
+                    </LoadingContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </MudGrid>
+        </MudTabPanel>
+    </MudTabs>
+
+}
+
+

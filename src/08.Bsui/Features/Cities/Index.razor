@@ -1,0 +1,57 @@
+﻿@page "/Cities"
+@using Zeta.NontonFilm.Shared.Cities.Queries.GetMovies
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_City_Index)]
+
+<BrowserTabTitle>@DisplayTextFor.Cities</BrowserTabTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<PageHeader Title="@DisplayTextFor.Cities" />
+<ErrorViewer Error="@_error" />
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetCities_City>>>(ReloadTableCities))"
+          @ref="_tableCities"
+          Height="400px"
+          FixedHeader="true"
+          Hover="true"
+          Bordered="true">
+    <ToolBarContent>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.PostAdd" OnClick="ShowDialogAdd">@CommonDisplayTextFor.Add @DisplayTextFor.City</MudButton>
+        <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(keyword => OnSearch(keyword))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium">
+        </MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortLabel="@nameof(GetCities_City.Name)" T="GetCities_City">@DisplayTextFor.Name</MudTableSortLabel>
+        </MudTh>
+        <MudTh>@DisplayTextFor.Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@DisplayTextFor.Name">
+            <MudHighlighter Text="@context.Name" HighlightedText="@_keyword" />
+        </MudTd>
+        <MudTd>
+            <MudTooltip Text="Delete">
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => ShowDialogDelete(context.Id))" />
+            </MudTooltip>
+            <MudTooltip Text="Edit">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => ShowDialogEdit(context.Id, context.Name))" />
+            </MudTooltip>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+

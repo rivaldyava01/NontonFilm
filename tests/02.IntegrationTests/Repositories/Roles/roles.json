@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Auditor",
+    "scopes":
+    [
+      "placeholder.audit.index",
+      "placeholder.audit.view"
+    ]
+  },
+  {
+    "name": "Doctor",
+    "scopes":
+    [
+      "placeholder.healthcheck.view"
+    ]
+  }
+]

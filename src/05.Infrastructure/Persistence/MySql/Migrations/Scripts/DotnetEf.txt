@@ -1,0 +1,10 @@
+﻿$env:ASPNETCORE_ENVIRONMENT='Local'
+dotnet tool update --global dotnet-ef
+
+dotnet ef migrations add MySqlNontonFilmDbContext_001_InitialSchema --context MySqlNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi --output-dir Persistence/MySql/Migrations
+
+dotnet ef migrations remove  --context MySqlNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi
+
+dotnet ef database update --context MySqlNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi
+
+dotnet ef database drop --force --context MySqlNontonFilmDbContext --project src/05.Infrastructure --startup-project src/06.WebApi

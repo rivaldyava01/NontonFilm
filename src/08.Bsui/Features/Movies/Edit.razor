@@ -1,0 +1,55 @@
+﻿@page "/Movies/Edit/{MovieId:guid}"
+@using Zeta.NontonFilm.Base.Enums
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Movie_Edit)]
+
+<BrowserTabTitle>@($"{CommonDisplayTextFor.Edit} {DisplayTextFor.Movie}")</BrowserTabTitle>]
+
+<ErrorViewer Error="@_error" />
+<Loading IsVisible="@_isLoading" />
+
+@if (_request is not null)
+{
+    <MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+    <PageHeader Title="@($"{CommonDisplayTextFor.Edit} {DisplayTextFor.Movie}")" />
+    <EditForm Model="_request" OnInvalidSubmit="OnInvalidSubmit" OnValidSubmit="OnValidSubmit">
+        <FluentValidationValidator />
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField Label="@DisplayTextFor.Title" @bind-Value="_request.Title" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudSelect @bind-Value="_rating" Label="@DisplayTextFor.Rating" HelperText="Enum">
+                    @foreach (RatingTypes rating in Enum.GetValues(typeof(RatingTypes)))
+                    {
+                        <MudSelectItem Value="@rating">@rating</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField Label="@DisplayTextFor.Duration" @bind-Value="_request.Duration" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudDatePicker Label="@DisplayTextFor.ReleaseDate" Editable="true" @bind-Date="_date" Placeholder="Select Date" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect Label="Genre" MultiSelection="true" @bind-SelectedValues="Options" T="UpdateMovieCommand_Genre">
+                    @foreach (var genre in _genres)
+                    {
+                        <MudSelectItem Value="@genre">@genre.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="@DisplayTextFor.Synopsis" @bind-Value="_request.Synopsis" Lines="3" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="@DisplayTextFor.PosterImageLink" @bind-Value="_request.PosterImage" />
+            </MudItem>
+        </MudGrid>
+        <MudPaper Elevation="0" Class="mt-8 text-right">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@CommonDisplayTextFor.Submit</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Dark" Href="@RouteFor.Details(MovieId)">@CommonDisplayTextFor.Cancel</MudButton>
+        </MudPaper>
+    </EditForm>
+}

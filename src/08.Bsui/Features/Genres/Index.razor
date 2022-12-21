@@ -1,0 +1,72 @@
+@page "/Genres"
+@using Zeta.NontonFilm.Shared.Genres.Queries.GetGenres
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Genre_Index)]
+
+<BrowserTabTitle>@DisplayTextFor.Genres</BrowserTabTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<PageHeader Title="@DisplayTextFor.Genres" />
+<ErrorViewer Error="@_error" />
+
+<MudGrid>
+    <MudItem xs="12">
+    </MudItem>
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<GetGenres_Genre>>>(ReloadTableGenres))"
+              @ref="_tableGenres"
+              Height="400px"
+              FixedHeader="true"
+              Hover="true"
+              Bordered="true">
+        <ToolBarContent>
+            <AuthorizeView>
+                <Authorized>
+                    @if (context.User.HasPermission(Permissions.NontonFilm_Genre_Add))
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Filled.PostAdd" OnClick="ShowDialogAdd" Class="ml-4">@CommonDisplayTextFor.Add @DisplayTextFor.Genre</MudButton>
+                    }
+                </Authorized>
+            </AuthorizeView>
+            <MudSpacer />
+            <MudTextField T="string"
+                          ValueChanged="@(keyword => OnSearch(keyword))"
+                          Placeholder="Search"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium">
+            </MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="@nameof(GetGenres_Genre.Name)" T="GetGenres_Genre">@DisplayTextFor.Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudText>@DisplayTextFor.Action</MudText>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="@DisplayTextFor.Name">
+                <MudText>
+                    <MudHighlighter Text="@context.Name" HighlightedText="@_keyword" />
+                </MudText>
+            </MudTd>
+            <MudTd>
+                <MudTooltip Text="Delete">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => ShowDialogDelete(context.Id))" />
+                </MudTooltip>
+                <MudTooltip Text="Edit">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => ShowDialogEdit(context.Id, context.Name))" />
+                </MudTooltip>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudGrid>
+

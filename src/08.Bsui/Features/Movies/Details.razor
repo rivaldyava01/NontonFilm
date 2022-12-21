@@ -1,0 +1,75 @@
+﻿@page "/Movies/Details/{MovieId:guid}"
+
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Movie_View)]
+
+@using Zeta.NontonFilm.Bsui.Common.Extensions
+@using Zeta.NontonFilm.Shared.Movies.Queries.GetMovie
+@using Zeta.NontonFilm.Shared.Movies.Queries.GetMovies
+
+<BrowserTabTitle />
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<ErrorViewer Error="@_error" />
+<Loading />
+
+@if (_movie is not null)
+{
+    <PageHeader Title="@_movie.Title.ToString()" />
+    <div class="text-right">
+        <AuthorizeView>
+            <Authorized>
+                @if (context.User.HasPermission(Permissions.NontonFilm_Movie_Edit))
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="@RouteFor.Edit(_movie.Id)">@CommonDisplayTextFor.Edit</MudButton>
+                }
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                @if (context.User.HasPermission(Permissions.NontonFilm_Movie_Delete))
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ShowDialogDelete">@CommonDisplayTextFor.Delete</MudButton>
+                }
+            </Authorized>
+        </AuthorizeView>
+
+    </div>
+    <MudGrid Style="margin-top:30px;">
+        <MudItem xs="6">
+            <MudImage Src="@_movie.PosterImage" Height="650" Style="width:480px"></MudImage>
+        </MudItem>
+        <MudItem xs="6">
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Title">@_movie.Title</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Rating">@_movie.Rating</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Duration">@_movie.Duration</MudField>
+            </MudItem>
+
+            @if (_movie.MovieGenres is not null)
+            {
+                <MudItem xs="12">
+                    <MudField Label="@DisplayTextFor.Genre">@_genre</MudField>
+                </MudItem>
+
+            }
+
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.ReleaseDate">@_movie.ReleaseDate.ToShortDateString()</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Synopsis">@_movie.Synopsis</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@CommonDisplayTextFor.Created">@_movie.Created</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@CommonDisplayTextFor.Modified">@_movie.Modified</MudField>
+            </MudItem>
+        </MudItem>
+    </MudGrid>
+
+}

@@ -1,0 +1,16 @@
+.logo
+{
+    margin: 16px;
+    background-image: url(~/../img/NontonFilm.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    min-height: 130px;
+}
+
+.main-content
+{
+    position: relative;
+    height: calc(100vh - 64px);
+    padding: 12px 24px 24px 24px;
+}

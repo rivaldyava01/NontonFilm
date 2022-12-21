@@ -1,0 +1,43 @@
+﻿<MudNavMenu>
+    <MudNavLink Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All" Href="@CommonRouteFor.Index">@CommonDisplayTextFor.Home</MudNavLink>
+    <AuthorizeView>
+        <Authorized>
+            <!-- #region Business Menus -->
+            @if (context.User.HasPermission(Permissions.NontonFilm_Movie_Index))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Movie" Href="@Features.Movies.Constants.RouteFor.Index">@NontonFilm.Shared.Movies.Constants.DisplayTextFor.Movies</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_Genre_Index))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.MovieFilter" Href="@Features.Genres.Constants.RouteFor.Index">@NontonFilm.Shared.Genres.Constants.DisplayTextFor.Genres</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_CinemaChain_Index))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Videocam" Href="@Features.CinemaChains.Constants.RouteFor.Index">@NontonFilm.Shared.CinemaChains.Constants.DisplayTextFor.CinemaChains</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_City_Index))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.LocationCity" Href="@Features.Cities.Constants.RouteFor.Index">@NontonFilm.Shared.Cities.Constants.DisplayTextFor.Cities</MudNavLink>
+            }
+            <!-- #endregion Business Menus -->
+            @if (context.User.HasPermission(Permissions.NontonFilm_Audit_Index))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.EventNote" Href="@Features.Audits.Constants.RouteFor.Index">@NontonFilm.Shared.Audits.Constants.DisplayTextFor.Audits</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_Movie_NowShowing))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Movie" Href="@Features.MemberArea.Movies.Constants.RouteFor.Index">@NontonFilm.Shared.Movies.Constants.DisplayTextFor.NowShowing</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_Cinema_User_Handle))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Room" Href="@Features.MemberArea.Cinemas.Constants.RouteFor.Index">@NontonFilm.Shared.Cinemas.Constants.DisplayTextFor.Cinema</MudNavLink>
+            }
+            @if (context.User.HasPermission(Permissions.NontonFilm_Ticket_User_Handle))
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.AccountBalanceWallet" Href="@Features.MemberArea.Tickets.Constants.RouteFor.TransactionHistory">@NontonFilm.Shared.Tickets.Constants.DisplayTextFor.TransactionHistory</MudNavLink>
+            }
+
+        </Authorized>
+    </AuthorizeView>
+    <MudNavLink Icon="@Icons.Material.Filled.Countertops" Href="@CommonRouteFor.About">@CommonDisplayTextFor.About</MudNavLink>
+</MudNavMenu>

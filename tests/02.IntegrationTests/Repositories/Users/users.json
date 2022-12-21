@@ -1,0 +1,66 @@
+[
+  {
+    "id": "user01",
+    "username": "user01@idproo.id",
+    "personas":
+    [
+      {
+        "type": "permanent",
+        "positionIds":
+        [
+          "position01"
+        ]
+      },
+      {
+        "type": "temporary",
+        "positionIds":
+        [
+        ]
+      },
+      {
+        "type": "functional",
+        "positionIds":
+        [
+        ]
+      },
+      {
+        "type": "adhoc",
+        "positionIds":
+        [
+        ]
+      }
+    ]
+  },
+  {
+    "id": "user02",
+    "username": "user02@idproo.id",
+    "personas":
+    [
+      {
+        "type": "permanent",
+        "positionIds":
+        [
+          "position02"
+        ]
+      },
+      {
+        "type": "temporary",
+        "positionIds":
+        [
+        ]
+      },
+      {
+        "type": "functional",
+        "positionIds":
+        [
+        ]
+      },
+      {
+        "type": "adhoc",
+        "positionIds":
+        [
+        ]
+      }
+    ]
+  }
+]

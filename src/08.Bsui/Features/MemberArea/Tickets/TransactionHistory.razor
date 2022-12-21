@@ -1,0 +1,40 @@
+﻿@page "/Tickets/TransactionHistory/User"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Ticket_User_Handle)]
+
+<BrowserTabTitle>TransactionHistory</BrowserTabTitle>
+<PageHeader Title="Transaction History" />
+<ErrorViewer Error="_error" />
+
+@if (_transactionHistory is null)
+{
+    <MudGrid>
+        <MudImage Src="~/../img/NontonFilm.png"></MudImage>
+        <MudText Typo="Typo.h1">Your Data Transaction is Empty</MudText>
+    </MudGrid>
+}
+
+else
+{
+    foreach (var transactionHistory in _transactionHistory)
+    {
+        <MudGrid Class="mt-1 mb-1 align-content-center ml-6">
+            <MudItem xs="3">
+                <MudImage Src="@transactionHistory.MoviePosterImage" Height="170"></MudImage>
+            </MudItem>
+            <MudItem xs="6">
+                <MudText Typo="Typo.body2">@DisplayTextFor.PurchaseDate : @transactionHistory.Created</MudText>
+                <MudText Typo="Typo.h5">@transactionHistory.CinemaName</MudText>
+                <MudText Typo="Typo.h5">@transactionHistory.MovieTitle</MudText>
+                <MudText Typo="Typo.body1">@DisplayTextFor.DateShow : @transactionHistory.DateShow</MudText>
+                <MudText Typo="Typo.body1">@DisplayTextFor.TimeShow : @transactionHistory.TimeShow</MudText>
+                <MudText Typo="Typo.body2">@transactionHistory.StudioName</MudText>
+                <MudText Typo="Typo.body2">@DisplayTextFor.SeatCode: @transactionHistory.SeatCode</MudText>
+            </MudItem>
+            <MudItem xs="3">
+                <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="(() => ShowDialogViewQrCode(transactionHistory.TicketSalesId))">Show QR Code</MudButton>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+    }
+}

@@ -1,0 +1,18 @@
+﻿@page "/"
+
+@using Zeta.NontonFilm.Bsui.Services.AppInfo
+
+@inject IOptions<AppInfoOptions> _appInfoOptions
+
+<AuthorizeView Context="authorizeContext">
+    <Authorized>
+        <BrowserTabTitle>@CommonDisplayTextFor.Home</BrowserTabTitle>
+        <MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+        <PageTitle>@CommonDisplayTextFor.Home | @_appInfoOptions.Value.FullName</PageTitle>
+        <MudText Typo="Typo.h3">@_greetings, @authorizeContext.User.GetDisplayName()</MudText>
+        <MudText Typo="Typo.h5" Class="mt-16">Welcome to</MudText>
+        <MudText Typo="Typo.h4" Class="mt-4">@_appInfoOptions.Value.FullName</MudText>
+    </Authorized>
+</AuthorizeView>
+
+

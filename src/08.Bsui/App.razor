@@ -1,0 +1,45 @@
+@using Zeta.NontonFilm.Bsui.Common.Pages.Errors
+@using Zeta.NontonFilm.Bsui.Layouts
+@using Zeta.NontonFilm.Bsui.Services.Authentication
+@using Zeta.NontonFilm.Bsui.Services.Authentication.Components
+
+@inject IOptions<AuthenticationOptions> _authenticationOptions
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            @if (_authenticationOptions.Value.Provider is not AuthenticationProvider.None)
+            {
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                    <NotAuthorized>
+                        @{
+                            var identity = context.User.Identity;
+
+                            if (identity is null || !identity.IsAuthenticated)
+                            {
+                                <RedirectToLogin />
+                            }
+                            else
+                            {
+                                <Forbidden />
+                            }
+                        }
+                    </NotAuthorized>
+                    <Authorizing>
+                        <MudText Typo="Typo.h5">Checking with the @nameof(Services.Authorization) @CommonDisplayTextFor.Service. Please wait...</MudText>
+                    </Authorizing>
+                </AuthorizeRouteView>
+            }
+            else
+            {
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                </RouteView>
+            }
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <NotFound />
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

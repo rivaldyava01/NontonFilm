@@ -1,0 +1,6 @@
+{
+  "EnvironmentVariables":
+  {
+    "ASPNETCORE_ENVIRONMENT": "Local"
+  }
+}

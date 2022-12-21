@@ -1,0 +1,28 @@
+﻿@using Zeta.NontonFilm.Client.Common.Responses
+
+@if (Error is not null)
+{
+    <MudPaper Elevation="0" Class="mb-6">
+        @if (!string.IsNullOrWhiteSpace(Error.Detail))
+        {
+            <MudAlert Variant="Variant.Filled" Severity="Severity.Error" Class="mt-4">
+                @Error.Detail
+            </MudAlert>
+        }
+
+        @foreach (var error in Error.Errors)
+        {
+            foreach (var errorDetail in error.Value)
+            {
+                <MudAlert Variant="Variant.Filled" Severity="Severity.Error" Class="mt-4">
+                    @errorDetail
+                </MudAlert>
+            }
+        }
+    </MudPaper>
+}
+
+@code {
+    [Parameter]
+    public ErrorResponse? Error { get; set; }
+}

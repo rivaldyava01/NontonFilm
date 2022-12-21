@@ -1,0 +1,30 @@
+﻿@page "/CinemaChains/Add"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_CinemaChain_Add)]
+
+<BrowserTabTitle>@($"{CommonDisplayTextFor.Add} {DisplayTextFor.CinemaChain}")</BrowserTabTitle>
+<PageHeader Title="@($"Add {DisplayTextFor.CinemaChain}")" />
+<ErrorViewer Error="_error" />
+<Loading IsVisible="_isLoading" />
+
+<EditForm Model="_request" OnInvalidSubmit="OnInvalidSubmit" OnValidSubmit="OnValidSubmit">
+    <FluentValidationValidator />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTextField Label="@DisplayTextFor.Name" @bind-Value="_request.Name" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="@DisplayTextFor.OfficeAddress" @bind-Value="_request.OfficeAddress" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField Label="@DisplayTextFor.EmailAddress" @bind-Value="_request.EmailAddress" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField Label="@DisplayTextFor.PhoneNumber" @bind-Value="_request.PhoneNumber" />
+        </MudItem>
+    </MudGrid>
+    <MudPaper Elevation="0" Class="mt-8 text-right">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@CommonDisplayTextFor.Submit</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Dark" Href="@RouteFor.Index">@CommonDisplayTextFor.Cancel</MudButton>
+    </MudPaper>
+</EditForm>

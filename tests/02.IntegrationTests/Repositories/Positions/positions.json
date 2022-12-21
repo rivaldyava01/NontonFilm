@@ -1,0 +1,40 @@
+[
+  {
+    "id": "position01",
+    "name": "Position 01",
+    "roleNames":
+    [
+      "Auditor"
+    ],
+    "customParameters":
+    [
+      {
+        "key": "KeyA",
+        "value": "ValueA-position01"
+      },
+      {
+        "key": "KeyB",
+        "value": "ValueB-position01"
+      }
+    ]
+  },
+  {
+    "id": "position02",
+    "name": "Position 02",
+    "roleNames":
+    [
+      "Doctor"
+    ],
+    "customParameters":
+    [
+      {
+        "key": "KeyA",
+        "value": "ValueA-position02"
+      },
+      {
+        "key": "KeyB",
+        "value": "ValueB-position02"
+      }
+    ]
+  }
+]

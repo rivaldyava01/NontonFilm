@@ -1,0 +1,34 @@
+﻿@page "/Movies/User/NowShowing"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Movie_NowShowing)]
+
+@inject MovieService _movieService
+
+<BrowserTabTitle>@DisplayTextFor.Movie</BrowserTabTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<ErrorViewer Error="_error" />
+
+@if (_movie is not null)
+{
+    <MudGrid>
+        <MudItem xs="12">
+        </MudItem>
+        @foreach (var movie in _movie)
+        {
+            <MudItem xs="3">
+                <MudCard Style="width:200px">
+                    <MudCardMedia Image="@movie.PosterImage" Height="300" Style="width:200px" />
+                    <MudCardContent>
+                        <MudLink Href="@RouteFor.Details(movie.Id)">
+                            <MudText Typo="Typo.h5" Align="Align.Center">@movie.Title</MudText>
+                        </MudLink>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+
+}
+
+
+

@@ -1,0 +1,110 @@
+﻿@page "/Movies/user/nowshowing/{MovieId:guid}"
+
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Movie_NowShowing)]
+
+@using Zeta.NontonFilm.Bsui.Common.Extensions
+@using Zeta.NontonFilm.Shared.Movies.Queries.GetMovie
+@using Zeta.NontonFilm.Shared.Movies.Queries.GetMovies
+
+<BrowserTabTitle />
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<ErrorViewer Error="@_error" />
+<Loading />
+
+@if (_movie is not null)
+{
+    <PageHeader Title="@_movie.Title.ToString()" />
+
+    <MudGrid Class="ml-6 mb-10">
+        <MudItem xs="5">
+            <MudImage Src="@_movie.PosterImage" Height="420" Style="width:300px"></MudImage>
+        </MudItem>
+        <MudItem xs="5">
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Title">@_movie.Title</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Rating">@_movie.Rating</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Duration">@_movie.Duration</MudField>
+            </MudItem>
+
+            @if (_genre is not null)
+            {
+                <MudItem xs="12">
+                    <MudField Label="@DisplayTextFor.Genre">
+                        @_genre
+                    </MudField>
+                </MudItem>
+            }
+
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.ReleaseDate">@_movie.ReleaseDate.ToShortDateString()</MudField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudField Label="@DisplayTextFor.Synopsis">@_movie.Synopsis</MudField>
+            </MudItem>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Class="ml-6">
+        <MudItem xs="6">
+            <MudAutocomplete T="GetCitiesForUserByMovieId_City"
+                         Label="@DisplayTextFor.City"
+                         SearchFunc="@SearchCity"
+                         @bind-Value="_citiesUser.City"
+                         ToStringFunc="@(x => x is null ? null : x.Name)"
+                         ResetValueOnEmptyText="true"
+                         CoerceText="true"
+                         CoerceValue="true"
+                         Clearable="true" />
+        </MudItem>
+        <MudItem xs="3">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Class="mb-10" OnClick="(() =>ShowCinemas(_citiesUser.City.Id, _movie.Id))">Submit</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    if(_cinemas is not null){
+        <MudGrid Class="ml-6 mb-10">
+            <MudItem xs="11">
+                <div hidden="@_showpanel">
+                    <MudExpansionPanels>
+                        @foreach (var cinema in _cinemas)
+                        {
+                            <MudExpansionPanel Text="@cinema.Name">
+                                @foreach (var studio in cinema.Studios)
+                                {
+                                    <MudDivider />
+                                    <MudGrid Class="mt-3">
+                                        <MudItem xs="6">
+                                            <MudText></MudText>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudText>@studio.Name</MudText>
+                                        </MudItem>
+                                        <MudItem>@studio.TicketPrice</MudItem>
+                                    </MudGrid>
+                                    <MudGrid Class="mb-3">
+                                        @foreach (var show in studio.Shows)
+                                        {
+                                            <MudItem xs="2">
+                                                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="@RouteFor.TicketDetails(show.Id)">@show.TimeShow</MudButton>
+                                            </MudItem>
+                                        }
+                                    </MudGrid>
+
+                                }
+
+                            </MudExpansionPanel>
+                        }
+
+                    </MudExpansionPanels>
+                </div>
+            </MudItem>
+        </MudGrid>
+        
+    }
+
+}

@@ -1,0 +1,36 @@
+﻿@page "/Genres/Details/{GenreId:guid}"
+
+@attribute [Authorize(Policy = Permissions.NontonFilm_Genre_View)]
+
+@using Zeta.NontonFilm.Bsui.Common.Extensions
+@using Zeta.NontonFilm.Shared.Genres.Queries.GetGenre
+@using Zeta.NontonFilm.Shared.Genres.Queries.GetGenres
+
+<BrowserTabTitle>@DisplayTextFor.Genres</BrowserTabTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<ErrorViewer Error="@_error" />
+
+
+
+@if (_genre is not null)
+{
+    <MudGrid>
+        <MudItem xs="12">
+        </MudItem>
+        @foreach (var genre in _genre.MovieGenres)
+        {
+            <MudItem xs="3">
+                <MudCard Style="width:200px">
+                    <MudCardMedia Image=@genre.MoviePosterImage Height="300" Style="width:200px" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5" Align="Align.Center">@genre.MovieTitle</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+
+    </MudGrid>
+
+}
+
+
